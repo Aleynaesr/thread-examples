@@ -1,48 +1,61 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <pthread.h>
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<pthread.h>
+// 15.2 yi içeriyor bu yanlışlıkla burada yazdın
+pthread_t thid[5];
+  static int numes[2000];
+  int count;
+  int oneArr,twoArr,threeArr,fourArr,fiveArr;
+  int error;
 
-pthread_t thid[10];
-int numes[10000];
-int count=0;
-int prime=0;
-int error;
+void* randomNumes(void *i) {
+      int  number = (intptr_t) i;
+      pthread_t tid = pthread_self();
 
-void* randomNumes(void *i)
-{  int  db = (intptr_t) i;
-    pthread_t tid = pthread_self();
-for(int sayi=(db*1000);sayi<(db*1000)+999;sayi++) {
-     count=0;
-    for(int j=2;j<numes[sayi];j++) {
-   if(numes[sayi]%j==0) {
-         count=1;
-break; }
-  }
-      if(count==0) {
-prime++;  }
- }
-printf(" %d prime number one tenth of array\n",prime);
+    oneArr=0;
+      twoArr=0;
+       threeArr=0;
+         fourArr=0;
+           fiveArr=0;
+	
+for(int y=(number*2000);y<(number*2000)+1999;y++) {
+    int e=numes[y];
+   count=0;
+  while(e != 0) {
+ 	++count;
+    e /= 10; }
+
+	if(count ==1){
+	oneArr++;}
+	if(count ==2){
+	twoArr++; }
+	if(count==3){
+	threeArr++; }
+	if(count==4){
+	fourArr++; }
+	if(count==5){
+}       
+
+printf("Thread %d:  1 - 9: %d,  10 - 99: %d,  100 - 999: %d,  1000 - 9999: %d,  10000 - 49999: %d\n", number+1 , oneArr , twoArr , threeArr , fourArr , fiveArr);
+
 pthread_equal(tid,thid[0]);
-	return NULL;
-}
+return NULL; }
 
 int main(void) {
 srand((unsigned)time(NULL));
-  int a = 0;
- for(int x=1; x<=10000; x++){
-  int number = rand() % 8999 +  1000;
-          	numes[x]=number; }
-      while(a < 10) {
+    int a = 1;
+
+    for(int x=0; x<10000; x++){
+      int number =rand() % 50000;
+                  numes[x]=number;}
+
+while(a<=5){
     error = pthread_create(&(thid[a]), NULL, &randomNumes, (void*) (intptr_t) a);
-        if (error != 0)
-       printf("\n ERROR:[%s]", strerror(error));
-          else
-       printf("Thread %d -",a+1);
-             pthread_join(thid[a],NULL);
-              a++;
-    }
-         return 0; 
-         
-         }
+  if (error != 0)
+            printf("\n ERROR:[%s]", strerror(error));
+  else
+            pthread_join(thid[a],NULL);
+        a++;  }
+return 0;   }
